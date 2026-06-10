@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48.0dip"
+    android:height="48.0dip"
+    android:viewportWidth="100.0"
+    android:viewportHeight="100.0">
+    <group>
+        <path
+            android:fillColor="@color/ic_shape_color3"
+            android:pathData="M 62,0.17 C 68,6.4 74,15 72,24 c -1,9 -9,15 -10,23 0,6 8,10 12,5 2,-2 2,-8 3,-9 7,14 7,32 -3,44 C 67,97 54,100 42,99 32,99 23,92 20,82 18,74 17,65 20,57 c 2,-3 1,7 5,7 6,0 4,-7 2,-10 -3,-6 -4,-16 2,-21 1,-2 5,-4 4,0 -1,5 1,12 7,12 6,0 4,-8 2,-11 -3,-5 -3,-12 1,-17 1,-2 4,-6 5,-7 0,5 0,11 4,14 5,3 11,-2 11,-7 1,-6 0,-11.4 -1,-16.83 z"/>
+        <path android:fillColor="@color/icon_shape_edit_check_select"
+            android:pathData="M50, 54 L36, 42 l-4,5 L50,64 72,34 l-5, -4 L50,54z" />
+    </group>
+</vector>

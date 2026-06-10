@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48.0dip"
+    android:height="48.0dip"
+    android:viewportWidth="100.0"
+    android:viewportHeight="100.0">
+    <group>
+        <path
+            android:fillColor="@color/ic_shape_color1"
+            android:pathData="M 45.63 0.00 L 54.24 0.00 C 66.12 0.56 79.12 2.38 88.10 10.94 C 97.37 20.01 99.40 33.68 99.78 46.06 C 99.96 58.54 99.43 71.84 92.89 82.85 C 87.81 91.54 78.16 96.46 68.52 98.24 C 57.11 100.31 45.34 100.33 33.87 98.69 C 24.37 97.24 14.54 93.41 8.67 85.42 C 1.99 76.56 0.56 65.12 0.00 54.37 L 0.00 46.32 C 0.45 34.03 2.28 20.48 11.33 11.32 C 20.33 2.46 33.56 0.53 45.63 0.00 Z" />
+        <path android:fillColor="@color/icon_shape_edit_check_select"
+            android:pathData="M50, 54 L36, 42 l-4,5
+                                L50,64 72,34 l-5, -4 L50,54z" />
+    </group>
+</vector>

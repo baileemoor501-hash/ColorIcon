@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48.0dip"
+    android:height="48.0dip"
+    android:viewportWidth="106.0"
+    android:viewportHeight="106.0">
+    <group>
+        <path
+            android:fillColor="@color/ic_shape_color5"
+            android:pathData="M53,3L103,3 103,103 3,103 3,3z" />
+        <path android:fillColor="@color/icon_shape_edit_check_select"
+            android:pathData="M53, 57 L39, 45 l-4,5
+                                L53,67 75,37 l-5, -4 L53,57z" />
+    </group>
+
+</vector>
