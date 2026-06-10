@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>颜色工具 - Web端</title>
+  <link rel="stylesheet" href="assets/style.css?v=7">
+</head>
+
+<body class="theme-light">
+  <main class="app-main">
+    <!-- 标签导航 -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="iconEditorTab">图标编辑</button>
+      <button class="tab-btn" data-tab="colorSchemeTab">颜色方案</button>
+    </nav>
+
+    <!-- 图标编辑器标签页 -->
+    <div id="iconEditorTab" class="tab-content active">
+      <div class="icon-editor-layout">
+        <div class="icon-preview-area">
+          <div class="icon-toolbar">
+            <div class="preview-tabs">
+              <button class="preview-tab-btn active" data-tab="iconPreview">图标预览</button>
+              <button class="preview-tab-btn" data-tab="wallpaperPreview">壁纸预览</button>
+            </div>
+            <div class="actions">
+              <button id="importIconPackUrl" class="btn">导入图标包链接</button>
+              <button id="importIconPack" class="btn">导入图标包</button>
+              <button id="exportCurrentIcon" class="btn btn-secondary">导出当前图标</button>
+              <button id="exportAllIcons" class="btn btn-secondary">导出全部</button>
+            </div>
+          </div>
+          <input id="importIconPackFile" type="file" multiple accept=".png" style="display:none" />
+          <div id="iconPreviewContent" class="preview-tab-content active">
+            <div id="iconGrid" class="icon-grid"></div>
+          </div>
+          <div id="wallpaperPreviewContent" class="preview-tab-content">
+            <div id="phonePreviewContainer" class="phone-preview-container">
+              <button id="toggleIconsBtn" class="toggle-icons-btn" title="显示/隐藏图标">
+                <span id="toggleIconsText">隐藏图标</span>
+              </button>
+              <button id="exportPreviewBtn" class="export-preview-btn" title="导出预览图">
+                导出预览图
+              </button>
+              <div class="phone-frame">
+                <div id="phonePreview" class="phone-preview">
+                  <div id="widgetPreviewLayer" class="widget-preview-layer"></div>
+                  <div id="phoneIconGrid" class="phone-icon-grid"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="icon-edit-panel">
+          <div class="icon-edit-tabs">
+            <button class="edit-tab-btn active" data-tab="color">颜色</button>
+            <button class="edit-tab-btn" data-tab="decoration">装饰</button>
+            <button class="edit-tab-btn" data-tab="shape">形状</button>
+            <button class="edit-tab-btn" data-tab="wallpaper">🖼️ 壁纸</button>
+            <button class="edit-tab-btn" data-tab="widget">🔧 Widget</button>
+          </div>
+          <div id="colorEditPanel" class="edit-panel-content active">
+            <div class="panel-actions">
+              <button id="saveColorScheme" class="btn">保存方案</button>
+              <button id="manageColorSchemes" class="btn btn-secondary">管理方案</button>
+              <button id="iconExportJson" class="btn">导出JSON</button>
+              <button id="iconImportJson" class="btn">导入JSON</button>
+              <button id="importColorValues" class="btn">导入颜色值</button>
+              <input id="iconImportFile" type="file" accept="application/json" style="display:none" />
+            </div>
+            <div class="panel-actions">
+              <button id="exportZipPackage" class="btn">导出ZIP包</button>
+              <button id="exportThemePackage" class="btn">导出主题ZIP包</button>
+            </div>
+            <div
+              style="padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px;">
+              <p style="margin: 0; font-size: 13px; color: var(--muted);">
+                💡 颜色配置为<strong style="color: var(--accent);">全局共享</strong>，修改后将应用于所有图标
+              </p>
+            </div>
+            <div class="color-section">
+              <h3>全局颜色处理</h3>
+              <div style="margin-bottom: 16px;">
+                <div class="input-group">
+                  <label for="globalPreMethod">处理方法</label>
+                  <select id="globalPreMethod" class="input">
+                    <option value="">无</option>
+                    <option value="keep_first">保持第一个前景色不变，其他随机 (keep_first)</option>
+                    <option value="keep_last">保持最后一个前景色不变，其他随机 (keep_last)</option>
+                    <option value="generate">根据背景色和前景色随机匹配，对比度>1.3 (generate)</option>
+                    <option value="no_bg">没有背景，其他前景色随机 (no_bg)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="color-section">
+              <h3>前景色（fg）</h3>
+              <div id="fgLayers" class="layer-list"></div>
+              <button id="addFgLayer" class="btn btn-secondary">添加层</button>
+            </div>
+            <div class="color-section">
+              <h3>背景色（bg）</h3>
+              <div id="bgLayer" class="layer-item"></div>
+              <button id="addBgLayer" class="btn btn-secondary">添加层</button>
+            </div>
+            <div class="color-section">
+              <h3>图标包管理</h3>
+              <div id="iconPackList" class="icon-pack-list"></div>
+            </div>
+          </div>
+          <div id="decorationEditPanel" class="edit-panel-content">
+            <p class="placeholder">装饰功能预留</p>
+          </div>
+          <div id="shapeEditPanel" class="edit-panel-content">
+            <div
+              style="padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px;">
+              <p style="margin: 0; font-size: 13px; color: var(--muted);">
+                💡 选择一个或多个形状作为图标背景，未选择时使用默认背景
+              </p>
+            </div>
+            <div id="shapeGrid" class="shape-grid"></div>
+          </div>
+          <div id="wallpaperEditPanel" class="edit-panel-content">
+            <div
+              style="padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px;">
+              <p style="margin: 0; font-size: 13px; color: var(--muted);">
+                💡 导入壁纸后选择一张作为主题包背景，支持JPG/PNG/WEBP格式
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+              <button id="importWallpaperLocal" class="btn">📤 导入壁纸</button>
+              <button id="importWallpaperParallax" class="btn">📚 导入视差壁纸</button>
+              <button id="importWallpaperUrl" class="btn btn-secondary">🔗 链接导入</button>
+            </div>
+            <div id="wallpaperGrid" class="wallpaper-grid"></div>
+            <input id="wallpaperFileInput" type="file" multiple accept="image/jpeg,image/png,image/webp"
+              style="display:none" />
+            <input id="wallpaperParallaxInput" type="file" multiple accept="image/png" style="display:none" />
+          </div>
+          <div id="widgetEditPanel" class="edit-panel-content">
+            <div style="padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px;">
+              <p style="margin: 0; font-size: 13px; color: var(--muted);">
+                💡 导入Widget后选择一个，已选Widget将包含在主题包中
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+              <button id="importWidgetLocal" class="btn">📤 导入ZIP</button>
+              <button id="importWidgetUrl" class="btn btn-secondary">🔗 链接导入</button>
+            </div>
+            <div id="widgetEditSection" style="padding: 12px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px;">
+              <h4 style="margin: 0 0 12px; font-size: 14px; color: var(--text);">编辑Widget属性</h4>
+              <div id="widgetEditForm">
+                <div class="input-group" style="margin-bottom: 12px;">
+                  <label for="widgetPreviewImage">预览图</label>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 160px; height: 80px; flex-shrink: 0; overflow: hidden; border-radius: 6px; border: 1px solid var(--border); background: var(--bg);">
+                      <img id="widgetPreviewImage" src="" alt="预览图" style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;" />
+                    </div>
+                    <button id="changeWidgetPreview" class="btn btn-secondary" style="flex: 1;">📷 更换预览图</button>
+                  </div>
+                  <input id="widgetPreviewInput" type="file" accept="image/png,image/jpg,image/jpeg,image/webp" style="display:none" />
+                </div>
+                <div class="input-group" style="margin-bottom: 12px;">
+                  <label for="widgetType">组件类型 (widget_type)</label>
+                  <select id="widgetType" class="input">
+                    <option value="">请选择...</option>
+                    <option value="cool_clock_widget">cool_clock_widget - 酷黑时钟</option>
+                    <option value="Geometry_clock">Geometry_clock - 几何时钟</option>
+                    <option value="cmn_new_color_widget">cmn_new_color_widget - 彩色组件</option>
+                    <option value="custom">自定义...</option>
+                  </select>
+                </div>
+                <div class="input-group" style="margin-bottom: 12px;">
+                  <label for="widgetName">组件名称 (widget_name)</label>
+                  <input id="widgetName" class="input" type="text" placeholder="例如: 我的时钟" />
+                </div>
+                <div class="input-group" style="margin-bottom: 12px;">
+                  <label for="widgetDownloadUrl">下载地址 (download_url)</label>
+                  <input id="widgetDownloadUrl" class="input" type="text" placeholder="例如: MyWidget.zip 或 https://..." />
+                </div>
+                <button id="deleteWidget" class="btn btn-secondary" style="width: 100%;">删除当前Widget</button>
+              </div>
+            </div>
+            <div id="widgetGrid" class="widget-grid"></div>
+            <input id="widgetFileInput" type="file" accept=".zip" style="display:none" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 颜色方案标签页 -->
+    <div id="colorSchemeTab" class="tab-content">
+      <header class="app-header">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <h1>颜色工具</h1>
+        </div>
+        <div class="controls">
+          <div class="input-group">
+            <label for="colorText">颜色输入</label>
+            <input id="colorText" class="input" placeholder="#6750A4 或 rgb(103,80,164) 或 hsl(262,34%,48%)" />
+          </div>
+          <div class="input-group">
+            <label for="colorInput">拾色器</label>
+            <input id="colorInput" type="color" class="input input-color" value="#6750A4" />
+          </div>
+          <div class="picker">
+            <div class="picker-canvas-wrap">
+              <canvas id="svCanvas" width="220" height="140" aria-label="画板"></canvas>
+              <div id="svThumb" class="picker-thumb" aria-hidden="true"></div>
+            </div>
+            <div class="picker-hue">
+              <input id="hueSlider" type="range" min="0" max="360" step="1" value="262" />
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="styleSelect">风格</label>
+            <select id="styleSelect" class="input">
+              <option value="TONAL_SPOT">TONAL_SPOT</option>
+              <option value="VIBRANT">VIBRANT</option>
+              <option value="EXPRESSIVE">EXPRESSIVE</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>主题</label>
+            <button id="themeToggle" class="btn" title="切换浅色/深色">浅色</button>
+          </div>
+          <div class="actions">
+            <button id="downloadCSS" class="btn">下载 CSS</button>
+            <button id="downloadJSON" class="btn">下载 JSON</button>
+            <button id="downloadPNG" class="btn">下载 PNG</button>
+            <button id="shareLink" class="btn">分享</button>
+            <button id="resetAll" class="btn btn-secondary">重置</button>
+          </div>
+        </div>
+      </header>
+
+      <section class="preview">
+        <div class="preview-color" id="currentColorPreview"></div>
+        <div class="preview-info" id="currentColorInfo">#6750A4 | rgb(103, 80, 164) | hsl(262, 34%, 48%)</div>
+      </section>
+
+      <section class="recent">
+        <h2>最近使用</h2>
+        <div id="recentColors" class="recent-list"></div>
+      </section>
+
+      <section class="palettes">
+        <div class="palettes-header">
+          <h2>颜色方案</h2>
+          <div class="hint">点击色块复制色值，双击可放大预览</div>
+        </div>
+        <div id="paletteContainer" class="palette-container"></div>
+      </section>
+
+      <section class="gradient-editor">
+        <div class="palettes-header">
+          <h2>颜色类型与渐变编辑器</h2>
+          <div class="hint">支持 Normal/Linear/Gradient（径向/圆形）编辑与JSON导入导出</div>
+        </div>
+        <div class="grad-toolbar">
+          <div class="input-group">
+            <label for="gradType">类型</label>
+            <select id="gradType" class="input">
+              <option value="color_normal">Normal</option>
+              <option value="line_gradient">Linear</option>
+              <option value="radial_gradient">Gradient - Radial</option>
+              <option value="sweep_gradient">Gradient - Sweep</option>
+            </select>
+          </div>
+
+          <div class="input-group grad-only grad-linear">
+            <label for="linearAngle">线性角度（°）</label>
+            <input id="linearAngle" class="input" type="number" min="0" max="360" step="1" value="0" />
+          </div>
+          <div class="input-group grad-only grad-sweep">
+            <label>圆形渐变角度</label>
+            <div class="split">
+              <input id="sweepStart" class="input" type="number" min="0" max="360" step="1" value="0" />
+              <input id="sweepEnd" class="input" type="number" min="0" max="360" step="1" value="360" />
+            </div>
+          </div>
+          <div class="input-group grad-only grad-radial">
+            <label>径向中心与范围</label>
+            <div class="split">
+              <input id="radialX" class="input" type="number" min="0" max="1" step="0.01" value="0.5" />
+              <input id="radialY" class="input" type="number" min="0" max="1" step="0.01" value="0.5" />
+              <input id="radialSize" class="input" type="number" min="0" max="1" step="0.01" value="0.5" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <select id="gradPreset" class="input">
+              <option value="none">预设：无</option>
+              <option value="rainbow">预设：彩虹</option>
+              <option value="warm-cool">预设：冷暖过渡</option>
+            </select>
+            <button id="gradAddStop" class="btn">添加色标</button>
+            <button id="gradReset" class="btn btn-secondary">重置渐变</button>
+            <button id="gradCopyCss" class="btn">复制CSS</button>
+            <button id="gradExportJson" class="btn">导出JSON</button>
+            <button id="gradImportJson" class="btn">导入JSON</button>
+            <input id="gradImportFile" type="file" accept="application/json" style="display:none" />
+          </div>
+        </div>
+
+        <div class="grad-layout">
+          <div class="grad-preview-wrap">
+            <div class="grad-left">
+              <div id="gradPreview" class="grad-preview" title="拖拽色标修改位置"></div>
+              <div id="gradTrack" class="grad-track"></div>
+            </div>
+            <div id="gradStops" class="grad-stops"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button id="modalClose" class="modal-close" aria-label="关闭">×</button>
+      <div id="modalSwatch" class="modal-swatch"></div>
+      <div id="modalInfo" class="modal-info"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" aria-hidden="true"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="src/color-utils.js?v=7" defer></script>
+  <script src="src/color-scheme.js?v=7" defer></script>
+  <script src="src/storage-manager.js?v=7" defer></script>
+  <script src="src/file-upload-handler.js?v=7" defer></script>
+  <script src="src/icon-loader.js?v=7" defer></script>
+  <script src="src/icon-renderer.js?v=7" defer></script>
+  <script src="src/shape-loader.js?v=7" defer></script>
+  <script src="src/app.js?v=7" defer></script>
+</body>
+
+</html>

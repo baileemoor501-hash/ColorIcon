@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>清除缓存</title>
+</head>
+<body>
+    <h1>清除localStorage缓存</h1>
+    <button onclick="clearStorage()">点击清除</button>
+    <div id="result"></div>
+
+    <script>
+        function clearStorage() {
+            localStorage.removeItem('color-tool.state.v1');
+            document.getElementById('result').innerHTML = '<p style="color: green;">缓存已清除！请关闭此页面并刷新主页面。</p>';
+        }
+    </script>
+</body>
+</html>

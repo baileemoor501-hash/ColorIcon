@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Shape加载测试</title>
+</head>
+<body>
+  <h1>Shape加载测试</h1>
+  <div id="output"></div>
+  <div id="preview"></div>
+
+  <script src="src/shape-loader.js"></script>
+  <script>
+    async function testShapeLoader() {
+      const output = document.getElementById('output');
+      const preview = document.getElementById('preview');
+
+      try {
+        output.innerHTML = '<p>正在加载Shape...</p>';
+
+        const loader = new ShapeLoader();
+
+        // 测试加载单个shape
+        console.log('Testing single shape load...');
+        const circleShape = await loader.loadShape('circle');
+        console.log('Circle shape loaded:', circleShape);
+
+        output.innerHTML += `<p>Circle shape loaded: ${circleShape.id}</p>`;
+        output.innerHTML += `<p>PathData length: ${circleShape.pathData.length}</p>`;
+        output.innerHTML += `<p>PathData preview: ${circleShape.pathData.substring(0, 100)}</p>`;
+
+        // 渲染SVG预览
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', '200');
+        svg.setAttribute('height', '200');
+        svg.setAttribute('viewBox', '0 0 100 100');
+        svg.style.border = '1px solid black';
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', circleShape.pathData);
+        path.setAttribute('fill', '#6750A4');
+
+        svg.appendChild(path);
+        preview.appendChild(svg);
+
+        // 测试加载所有shapes
+        console.log('Testing all shapes load...');
+        const allShapes = await loader.loadAllShapes();
+        console.log('All shapes loaded:', allShapes.length);
+
+        output.innerHTML += `<p>Total shapes loaded: ${allShapes.length}</p>`;
+        output.innerHTML += '<ul>';
+        allShapes.slice(0, 10).forEach(shape => {
+          output.innerHTML += `<li>${shape.id} - ${shape.name} (${shape.pathData.length} chars)</li>`;
+        });
+        output.innerHTML += '</ul>';
+
+      } catch (error) {
+        console.error('Test failed:', error);
+        output.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+        output.innerHTML += `<pre>${error.stack}</pre>`;
+      }
+    }
+
+    testShapeLoader();
+  </script>
+</body>
+</html>
